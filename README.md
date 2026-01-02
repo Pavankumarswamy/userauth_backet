@@ -1,16 +1,22 @@
-# Implementation Summary
+# Certo
 
-## ✅ Current Features
+A platform for ECET aspirants. This Spring Boot application serves as the backend for user management and authentication.
 
-### **User Management System**
+## 🛠 Tech Stack
 
-A Spring Boot application with user management functionality using service implementation pattern.
+- **Language:** Java 17
+- **Framework:** Spring Boot 4.0.1
+- **Key Dependencies:**
+  - Spring Boot Starter Data JPA
+  - Spring Boot Starter Web
+  - Spring Boot Starter Validation
+  - MySQL Driver
+  - Lombok
+- **Build Tool:** Maven
 
----
+## 📋 Architecture Overview
 
-## 📋 Architecture Overview:
-
-The application follows proper layered architecture:
+The application follows a proper layered architecture:
 
 ```
 Controller Layer (logincontroller.java)
@@ -24,26 +30,36 @@ Repository Layer (loginrepo.java)
 Database (MySQL - certo)
 ```
 
----
+## 🚀 Features & API Endpoints
 
-## 🎯 Available Features:
-
-### 1. Add Single User
+### 1. User Registration
 - **URL:** `POST http://localhost:8081/api/v1/login`
-- **Function:** Adds a single user with username, email, password, and terms acceptance
-- **Request Body:** JSON with user details
-- **Response:** Success or error message
+- **Description:** Adds a single user with username, email, password, and terms acceptance status.
+- **Request Body:**
+  ```json
+  {
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "pass123",
+    "acceptedTermsAndConditions": true,
+    "address": {
+       "street": "123 Main St",
+       "city": "Nellore",
+       "state": "AP",
+       "zipCode": "524001"
+    }
+  }
+  ```
 
-### 2. Fetch All Users  
+### 2. Fetch All Users
 - **URL:** `GET http://localhost:8081/api/v1/users`
-- **Function:** Retrieves all users from the database
-- **Response:** JSON array of all user objects
+- **Description:** Retrieves all users registered in the database.
+- **Response:** JSON array of user objects.
 
----
-
-## 📊 Database Schema:
+## 📊 Database Schema
 
 ### Table: `users`
+
 | Column Name                      | Type         | Nullable | Description                          |
 |----------------------------------|--------------|----------|--------------------------------------|
 | id                               | BIGINT       | NO       | Primary Key (Auto Increment)         |
@@ -51,91 +67,51 @@ Database (MySQL - certo)
 | email                            | VARCHAR(255) | YES      | User's email address                 |
 | password                         | VARCHAR(255) | YES      | User's password                      |
 | accepted_terms_and_conditions    | TINYINT(1)   | YES      | Boolean for T&C acceptance           |
+| address_id                       | BIGINT       | YES      | Foreign Key to Address table         |
 
----
+### Table: `address` (Linked One-To-One)
+*Note: Linked to User entity via One-To-One relationship.*
 
-## 🔧 Fixed Issues:
+## � Getting Started
 
-1. **Model (`login.java`)**
-   - ✅ Added JPA entity annotations (`@Entity`, `@Table`)
-   - ✅ Added fields: `id`, `username`, `email`, `password`, `acceptedTermsAndConditions`
-   - ✅ Added getters, setters, and constructors
-   - ✅ Added `@Column` annotation for proper database mapping
+### Prerequisites
+- JDK 17 or later
+- MySQL Server
+- Maven (optional, wrapper provided)
 
-2. **Repository (`loginrepo.java`)**
-   - ✅ Extended `JpaRepository<login, Long>` to enable CRUD operations
-   - ✅ Added `@Repository` annotation
+### Installation & Run
+1. Clone the repository.
+2. Configure your database settings in `application.properties`.
+3. Run the application:
 
-3. **Service Interface (`loginservice.java`)**
-   - ✅ Added method declarations: `add()`, `getall()`
-
-4. **Service Implementation (`loginserviceimplentatio.java`)**
-   - ✅ Implemented all interface methods
-   - ✅ Added proper error handling
-
-5. **Controller (`logincontroller.java`)**
-   - ✅ Added `@RequestBody` annotation for proper JSON deserialization
-   - ✅ Fixed endpoint paths
-   - ✅ Proper REST controller configuration
-
----
-
-## 💡 Key Design Decisions:
-
-- ✅ Using **service implementation** (not default service)
-- ✅ Proper **layered architecture** (Controller → Service Interface → Service Implementation → Repository → Database)
-- ✅ All CRUD operations through **JpaRepository**
-- ✅ Proper **error handling** in service layer
-- ✅ **RESTful API** design
-- ✅ Boolean field for **terms and conditions** tracking
-- ✅ Backward compatible - old users have `null` for terms field
-
----
-
-## 🛠️ How to Use:
-
-### 1. Start the Application:
 ```powershell
 .\mvnw.cmd spring-boot:run
 ```
 
-### 2. Add a User:
+### Usage Examples (PowerShell)
+
+**Add a User:**
 ```powershell
 Invoke-WebRequest -Uri http://localhost:8081/api/v1/login -Method POST -UseBasicParsing -ContentType "application/json" -Body '{"username":"john_doe","email":"john@example.com","password":"pass123","acceptedTermsAndConditions":true}'
 ```
 
-### 3. Fetch All Users:
+**Fetch All Users:**
 ```powershell
 (Invoke-WebRequest -Uri http://localhost:8081/api/v1/users -Method GET -UseBasicParsing).Content
 ```
 
----
-
-## 📁 Files Structure:
+## 📁 Project Structure
 
 ```
 src/main/java/com/cetnext/certo/
 ├── controller/
-│   └── logincontroller.java      # REST endpoints
+│   └── logincontroller.java         # REST endpoints
 ├── service/
-│   ├── loginservice.java          # Service interface
+│   ├── loginservice.java            # Service interface
 │   └── implementation/
-│       └── loginserviceimplentatio.java  # Service implementation
+│       └── loginserviceimplentatio.java # Service implementation
 ├── repo/
-│   └── loginrepo.java             # JPA Repository
+│   └── loginrepo.java               # JPA Repository
 └── models/
-    └── login.java                 # Entity model with JPA annotations
+    └── login.java                   # Entity model
 ```
-
----
-
-## ✨ Status: OPERATIONAL
-
-The application is fully functional with:
-- ✅ User creation with terms and conditions tracking
-- ✅ Fetch all users functionality
-- ✅ Proper service implementation pattern
-- ✅ Clean architecture and error handling
-- ✅ MySQL database integration
-
-All requirements have been successfully implemented and the application is ready for use!
